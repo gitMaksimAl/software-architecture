@@ -4,6 +4,7 @@ import Lesson_1.Staff.Angle3D;
 import Lesson_1.Staff.Point3D;
 
 public class Camera {
+    // public fields
     Point3D Location = null;
     Angle3D Angle = null;
 

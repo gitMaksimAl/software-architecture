@@ -5,6 +5,7 @@ import Lesson_1.Staff.Point3D;
 import Lesson_1.Staff.Color;
 
 public class Flash {
+    // public fields
     Point3D Location = null;
     Angle3D Angle = null;
     Color Color = null;
