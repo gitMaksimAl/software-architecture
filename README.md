@@ -34,3 +34,7 @@ Patterns
 * DIP
 
 >Принцип инверсии зависимостей.
+
+## Lesson 4
+
+Contract First
