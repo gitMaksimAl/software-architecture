@@ -3,12 +3,9 @@ package Lesson_4.Homework_4.TicketService.Tickets;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import Lesson_4.Homework_4.TicketService.Document;
-
 public class BusTicket extends Ticket {
     public String trip;
     public Date arrivalTime;
-    private Document customer;
 
     public BusTicket(String provider, long rootNumber, double price, int place, Date date, String trip) {
         super(provider, rootNumber, price, place, date);
@@ -20,10 +17,6 @@ public class BusTicket extends Ticket {
 
     public String getTrip() {
         return trip;
-    }
-
-    public void setCustomer(Document customer) {
-        this.customer = customer;
     }
 
     @Override

@@ -11,4 +11,12 @@ public class Document {
         this.lastName = lname;
         this.docId = cardNumber;
     }
+
+    @Override
+    public String toString() {
+        return String.format(">>PassportRF<<\n%d\n%s %s",
+            this.docId,
+            this.firstName,
+            this.lastName);
+    }
 }

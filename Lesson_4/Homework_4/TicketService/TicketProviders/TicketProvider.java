@@ -1,17 +1,14 @@
 package Lesson_4.Homework_4.TicketService.TicketProviders;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import Lesson_4.Homework_4.TicketService.ServiceException;
+import Lesson_4.Homework_4.TicketService.ContractException;
 import Lesson_4.Homework_4.TicketService.Tickets.Ticket;
 
 public class TicketProvider {
 
-    // TODO:
-    // fields not match with diagram
     protected String providerName;
     protected HashMap<Date, List<Ticket>> tickets;
 
@@ -24,23 +21,27 @@ public class TicketProvider {
         ticket.isValid = true;
     }
 
-    // TODO;
-    // args not match with diagram
-    public List<Ticket> getTicket(Date date) throws ServiceException{
+    /**
+     * return tickets list by date
+     * @param date
+     * @return
+     * @throws ContractException
+     */
+    public List<Ticket> getTicket(Date date) throws ContractException{
         try{
             return tickets.get(date);
         } catch (NullPointerException e) {
-            throw new ServiceException("have not this data.");
+            throw new ContractException("Have not this date.");
         }
     }
 
-    // TODO:
-    // Temporary method not match with diagram
+    /**
+     * add one day tickets pack to provider
+     * @param ticketList
+     */
     public void addTicket(List<Ticket> ticketList) {
-        for (Ticket ticket : ticketList) {
-            if (!this.tickets.containsKey(ticket.date))
-                this.tickets.put(ticket.date, new ArrayList<>());
-            this.tickets.get(ticket.date).add(ticket);
-        }
+        Date date = ticketList.get(0).date;
+        if (!this.tickets.containsKey(date))
+            this.tickets.put(date, ticketList);
     }
 }

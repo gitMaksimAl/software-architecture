@@ -11,17 +11,21 @@ public class CashProvider {
         this.hashCard *= 31 + String.valueOf(cardNumber).hashCode();
     }
 
-    public boolean getMoney(double price) throws ServiceException{
-        if (price <= 0.0) throw new ServiceException("Not valid price.");
+    public boolean getMoney(double price) throws ContractException{
+        if (price <= 0.0) throw new ContractException("Not valid price.");
         else return (this.isAithorization);
     }
 
-    // TODO:
-    // params not match with diagram
-    public void autorization(long cardNumber) throws ServiceException{
-        if (this.hashCard == 17 * (31 + String.valueOf(cardNumber).hashCode()))
+    /**
+     * check card with hashcode
+     * @param cardNumber
+     * @throws ContractException
+     */
+    public void autorization(long cardNumber) throws ContractException{
+        long hash = 17;
+        if (this.hashCard == (hash  *= 31 + String.valueOf(cardNumber).hashCode()))
             this.isAithorization = true;
-        else throw new ServiceException("Authotization not passed.");
+        else throw new ContractException("Authotization not passed.");
     }
 
     public long getCard() {

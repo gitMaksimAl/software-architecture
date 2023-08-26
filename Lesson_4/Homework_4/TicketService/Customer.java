@@ -27,33 +27,43 @@ public class Customer {
         this.documents = new ArrayList<>();
     }
 
+    //purchased tickets are saved by the customer
     public boolean buyTicket(Ticket ticket) {
         try {
             if (!ticket.isValid && cash.getMoney(ticket.price)) {
-                tickets.add(ticket);
+                this.tickets.add(ticket);
                 return true;
             } else return false;
-        } catch (ServiceException e) {
+        } catch (ContractException e) {
             System.err.println(e.getMessage());
             return false;
         }
     }
 
-    // TODO:
-    // return type not match with diagram
-    public void search(Date date, TicketProvider provider) {
+    /**
+     * search for a ticket by date at the provider
+     * @param date
+     * @param provider
+     * @return list of available tickets
+     */
+    public List<Ticket> search(Date date, TicketProvider provider) {
+        List<Ticket> availableTickets = new ArrayList<>();
         try {
-            for (Ticket ticket : provider.getTicket(date)) {
+            availableTickets = provider.getTicket(date);
+            for (Ticket ticket : availableTickets) {
                 System.out.println(ticket);
-                this.tickets.add(ticket);
             }
-        } catch (ServiceException e) {
+        } catch (ContractException e) {
             System.out.println(e.getMessage());
-        }
+        } return availableTickets;
     }
 
     public void addDocument(String name, String lname, long number) {
         this.documents.add(new Document(name, lname, number));
+    }
+
+    public Document getDocument(int n) {
+        return documents.get(n);
     }
 
     @Override

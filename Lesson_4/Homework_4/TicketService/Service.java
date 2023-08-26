@@ -1,8 +1,8 @@
 package Lesson_4.Homework_4.TicketService;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -35,15 +35,42 @@ public class Service {
             System.err.println("Thread interrupted.....");
         }
     }
+
+    public static long getCardNumber(Scanner scanner) throws ContractException{
+        System.out.println("Please enter card number for authentification.");
+        try {
+            return scanner.nextLong();
+        } catch (InputMismatchException serv) {
+            throw new ContractException("This card doesn`t exist.");
+        } catch (NoSuchElementException | IllegalStateException ex) {
+            System.err.println("Input not valid.");
+            return -1;
+        }
+    }
+
+    public static void getDocument(Customer user, Scanner scanner) {
+        try {
+            System.out.println(String.format("Please enter your first name, "
+                + "last name, document ID on each line."));
+                user.addDocument(scanner.nextLine(),
+                    scanner.nextLine(),
+                    scanner.nextLong());
+        } catch (InputMismatchException l) {
+            System.err.println("Wrong document ID");
+        } catch (NoSuchElementException | IllegalStateException e) {
+            System.err.println("Input error");
+        }
+    }
     
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
         List<Ticket> ticketPack = new ArrayList<>();
         List<Ticket> ticketPack2 = new ArrayList<>();
         List<Ticket> ticketPack3 = new ArrayList<>();
 
         // tickets creating
         //region
-        System.err.println("\033[H\033[2J");
+        System.out.println("\033[H\033[2J");
         System.out.print("Please wait tickets are being created...");
         Date today = new Date(System.currentTimeMillis());
         Service.ticketCreate(ticketPack, today, TRIP1);
@@ -51,13 +78,12 @@ public class Service {
         Service.ticketCreate(ticketPack2, today2, TRIP2);
         Date today3 = new Date(System.currentTimeMillis());
         Service.ticketCreate(ticketPack3, today3, TRIP3);
-        System.err.println("\033[H\033[2J");
+        System.out.println("\033[H\033[2J");
         //endregion
 
 
         BusProvider avtoTrans = new BusProvider(PROVIDER_NAME);
         Customer user = new Customer("Arseni", 123456789);
-        Date curDate = new Date();
 
         // put tickets and trips info
         //region
@@ -70,35 +96,56 @@ public class Service {
         // show trips and choice one
         //region
         avtoTrans.getTrips();
-        System.out.println("\nPlease choice date of trip.(Copy/Paste)");
-        String date = new String();
-        try (Scanner scanner = new Scanner(System.in)) {
-            date = scanner.nextLine();
-            if (date.equals(today.toString())) {
-                user.search(today, avtoTrans);
-                curDate = today;
-            } else if (date.equals(today2.toString())) {
-                user.search(today2, avtoTrans);
-                curDate = today2;
-            } else if (date.equals(today3.toString())) {
-                user.search(today3, avtoTrans);
-                curDate = today3;
-            } else System.out.println("Wrong choice.");
+        List<Ticket> availableTickets = new ArrayList<>();
+        System.out.println("\nPlease choice trip.(Copy/Paste)");
+        String trip = new String();
+        String tripDate = new String();
+        try {
+            trip = scanner.nextLine();
+            System.out.println("\nPlease choice date of trip.(Copy/Paste)");
+            tripDate = scanner.nextLine();
+            System.out.println("\033[H\033[2J");
+            if (tripDate.equals(today.toString()))
+                availableTickets = user.search(today, avtoTrans);
+            else if (tripDate.equals(today2.toString()))
+                availableTickets = user.search(today2, avtoTrans);
+            else if (tripDate.equals(today3.toString()))
+                availableTickets = user.search(today3, avtoTrans);
+            else System.err.println("Wrong choice.");
         } catch (NoSuchElementException | IllegalArgumentException e) {
-            System.out.println("Wrong input.");
+            System.err.println("Choice trip. Input error.");
         }
         //endregion
 
         // choice ticket
         //region
+        String ticketNumber = new String();
         System.out.println("\nPlease choice ticket(by number).");
-        try (Scanner scanner = new Scanner(System.in)) {
-            date = scanner.nextLine();
-            avtoTrans.getTicket(curDate)
-            user.buyTicket
+        try {
+            ticketNumber = scanner.nextLine();
+            for (Ticket ticket : availableTickets) {
+                if (ticket.rootNumber == Long.parseLong(ticketNumber)) {
+                    Service.getDocument(user, scanner);
+                    user.cash.autorization(Service.getCardNumber(scanner));
+                    if (user.buyTicket(ticket))
+                        avtoTrans.updateTicketStatus(trip,
+                        ticket,
+                        user.getDocument(0));
+                    break;
+                }
+            }
+            System.out.println("\033[H\033[2J");
+            System.out.println(String.format("Your ticket:\n%s",
+                user.tickets.get(0)));
+        } catch (ContractException serv) {
+            System.out.println(serv.getMessage());
         } catch (NoSuchElementException | IllegalArgumentException e) {
-            System.out.println("Wrong input.");
+            System.err.println(e.getMessage());
+        } catch (IndexOutOfBoundsException out) {
+            System.err.println("Wrong ticket number.");
         }
+        //endregion
 
+        scanner.close();
     }
 }
