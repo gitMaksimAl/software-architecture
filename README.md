@@ -39,3 +39,7 @@ Patterns
 ## Lesson 4
 
 Contract First
+
+Realize a UML diagram below
+
+!["diagram"](./TicketSchema.png)
