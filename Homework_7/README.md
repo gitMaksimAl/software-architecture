@@ -30,8 +30,14 @@
   * head
   * body
 
+## Design
+
 !["site_design"](./ReportService.png)
 
+## ERG
+
 !["erd"](./reportservice.png)
+
+## Component schema
 
 !["component-schema"](ReportServiceUML.png)
