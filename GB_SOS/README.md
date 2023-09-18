@@ -23,3 +23,7 @@
 ## Components schema
 
 !["components diagram"](./GB-SOS-Packages.png)
+
+## Authorization schema
+
+!["authorization diagram"](./GB-SOS-Authorization.png)
