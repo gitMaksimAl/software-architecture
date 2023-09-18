@@ -18,4 +18,8 @@
 
 ## OpenAPI
 
-[!["openapi logo"](./logo.png)](./openapi.yaml)
+[!["openapi logo"](./logo.svg)](./openapi.yaml)
+
+## Components schema
+
+!["components diagram"](./GB-SOS-Packages.png)

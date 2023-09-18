@@ -1,11 +1,12 @@
 openapi: 3.0.3
 info:
   title: GB-SOS API
-  version: "1.0"
+  version: "1.1"
   description: |-
     ## GB-SOS
 
     Client-server application for controlling vacuum cleaners.
+    Authentication added for authorized requests to API.
   contact:
     email: sobaka_internet@internet.ru
   license:
@@ -33,6 +34,13 @@ paths:
         - robot
       description: Add new robot
       operationId: createRobot
+      parameters:
+        - name: api_key
+          in: header
+          description: token
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -46,14 +54,18 @@ paths:
           description: Unauthorized
         "500":
           description: Internal Server Error
-      security:
-        - api_key: []
     get:
       tags:
         - robot
       description: Get a array of robots
       operationId: readRobots
       parameters:
+        - name: api_key
+          in: header
+          description: token
+          required: true
+          schema:
+            type: string
         - name: group
           in: query
           required: true
@@ -72,14 +84,18 @@ paths:
           description: No content
         "401":
           description: Unauthorized
-      security:
-        - api_key: []
   /robot/{robotId}:
     delete:
       tags:
         - robot
       operationId: delRobot
       parameters:
+        - name: api_key
+          in: header
+          description: token
+          required: true
+          schema:
+            type: string
         - name: robotId
           in: path
           required: true
@@ -94,8 +110,6 @@ paths:
           description: Not found
         "500":
           description: Internal Server Error
-      security:
-        - api_key: []
   /schedule:
     get:
       tags:
@@ -103,6 +117,12 @@ paths:
       description: Get a array of tasks
       operationId: readSchedules
       parameters:
+        - name: api_key
+          in: header
+          description: token
+          required: true
+          schema:
+            type: string
         - name: userId
           in: query
           required: true
@@ -125,13 +145,18 @@ paths:
           description: Unauthorized
         "500":
           description: Internal Server Error
-      security:
-        - api_key: []
     put:
       tags:
         - schedule
       description: Update task
       operationId: updateSchedule
+      parameters:
+        - name: api_key
+          in: header
+          description: token
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -145,13 +170,18 @@ paths:
           description: Unauthorized
         "500":
           description: Internal Server Error
-      security:
-        - api_key: []
     post:
       tags:
         - schedule
       description: Add new task in the schedule
       operationId: addSchedulle
+      parameters:
+        - name: api_key
+          in: header
+          description: token
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -167,14 +197,18 @@ paths:
           description: Unauthorized
         "500":
           description: Internal Server Error
-      security:
-        - api_key: []
     delete:
       tags:
         - schedule
       description: delete a task in schedule
       operationId: delSchedule
       parameters:
+        - name: api_key
+          in: header
+          description: token
+          required: true
+          schema:
+            type: string
         - name: robotId
           in: query
           required: true
@@ -195,8 +229,6 @@ paths:
           description: Not found
         "500":
           description: Internal Server Error
-      security:
-        - api_key: []
   /user/login:
     get:
       tags:
