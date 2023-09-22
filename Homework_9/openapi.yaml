@@ -1,0 +1,229 @@
+openapi: 3.0.3
+info:
+  title: Geek Brains, Seminar 9 - OpenAPI 3.0
+  version: "1.0"
+  description: |-
+    ## GB Cloud &#9729;
+    Online service for VPS provider.
+  contact:
+    email: sobaka_internet@internet.ru
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+externalDocs:
+  description: About project
+  url: ./README.md
+servers:
+  - url: http://localhost:8080/api/v1.0/
+    description: api version 1, starting verion
+paths:
+  /Customer:
+    post:
+      summary: Create customer
+      operationId: addCustomer
+      parameters:
+        - name: fio
+          description: User fio
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: phone
+          description: User phone
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: passwd
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Create customer object
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Customer"
+      responses:
+        "201":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+        "400":
+          description: Bad request
+        "403":
+          description: Forbidden
+        "404":
+          description: Not found
+        "500":
+          description: Internal Server Error
+        "default":
+          description: Not Implemented
+    get:
+      summary: Login
+      operationId: customerLogin
+      parameters:
+        - name: phone
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: passwd
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Login success
+          content:
+            application/json:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not found
+        "500":
+          description: Internal Server Error
+        "default":
+          description: Not Implemented
+  /VPS:
+    get:
+      summary: Buy private server
+      operationId: getServer
+      parameters:
+        - name: hardware
+          description: Server specs
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: OS
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "404":
+          description: Not found
+        "500":
+          description: Internal Server Error
+        "default":
+          description: Not Implemented
+components:
+  schemas:
+    Server:
+      type: object
+      required:
+        - server_ip
+        - freeCPU
+        - freeRAM
+        - freeCapacity
+        - subnet
+      properties:
+        server_ip:
+          type: string
+          format: binary
+          description: ip address in binary(16) format
+        freeCPU:
+          type: integer
+          example: 2
+          description: count of free cpu`s on server
+        freeRAM:
+          type: integer
+          example: 1
+          description: count of free RAM`s on the server in Gb
+        freeCapacity:
+          type: integer
+          example: 256
+          description: count of free disk space on the server in Mb
+        subnet:
+          type: string
+          format: binary
+          description: subnet mask
+    Domain:
+      type: object
+      required:
+        - hardware
+        - OS
+        - subnet
+      properties:
+        hardware:
+          type: string
+          description: info about hardware on the servers
+        OS:
+          type: string
+          enum:
+            - WindowsPro 11
+            - Ubuntu 22
+            - Debian 11
+            - RedHat 9
+        subnet:
+          type: string
+          format: binary
+          description: subnet mask
+    Order:
+      type: object
+      required:
+        - id
+        - customer
+        - price
+        - begin
+        - expire
+        - needCPU
+        - needRAM
+        - needCapacity
+        - hardware
+        - OS
+        - ip
+      properties:
+        id:
+          type: integer
+        customer:
+          type: integer
+        price:
+          type: number
+        begin:
+          type: string
+          description: Date and time of the oerder
+        expire:
+          type: string
+          description: Date of the expired time
+        needCPU:
+          type: integer
+        needRAM:
+          type: integer
+        needCapacity:
+          type: integer
+        hardware:
+          type: string
+        OS:
+          type: string
+        ip:
+          type: string
+    Customer:
+      type: object
+      required:
+        - id
+        - fio
+        - phone
+        - hashCode
+      properties:
+        id:
+          type: integer
+        fio:
+          type: string
+        phone:
+          type: string
+        passwdHash:
+          type: integer
